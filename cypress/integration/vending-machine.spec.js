@@ -320,103 +320,83 @@ describe('자판기', () => {
 
     describe('충전 테스트', () => {
       it('충전금액을 입력하지 않고 충전하기를 눌렀을때 보유 금액이 변경되지 않는다.', () => {
-        cy.$vendingMachineChargeSubmit()
-          .click()
-          .then(() => {
-            cy.$vendingMachineChargeInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                valueMissing: true,
-                valid: false,
-              });
+        cy.$vendingMachineChargeSubmit().click();
+        cy.$vendingMachineChargeInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            valueMissing: true,
+            valid: false,
           });
       });
 
       it('충전 금액은 최소값 100을 넘겨야된다.(99)', () => {
         cy.$vendingMachineChargeInput().type(99);
-        cy.$vendingMachineChargeSubmit()
-          .click()
-          .then(() => {
-            cy.$vendingMachineChargeInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                rangeUnderflow: true,
-                valid: false,
-              });
+        cy.$vendingMachineChargeSubmit().click();
+        cy.$vendingMachineChargeInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            rangeUnderflow: true,
+            valid: false,
           });
       });
 
       it('충전 금액은 10 단위여야한다.(121)', () => {
         cy.$vendingMachineChargeInput().type(121);
-        cy.$vendingMachineChargeSubmit()
-          .click()
-          .then(() => {
-            cy.$vendingMachineChargeInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                stepMismatch: true,
-                valid: false,
-              });
+        cy.$vendingMachineChargeSubmit().click();
+        cy.$vendingMachineChargeInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            stepMismatch: true,
+            valid: false,
           });
       });
 
       it('충전금액을 입력하고 충전하기를 누르면 보유 금액이 입력된 만큼 변경된다.', () => {
         cy.$vendingMachineChargeInput().type(120);
-        cy.$vendingMachineChargeSubmit()
-          .click()
-          .then(() => {
-            cy.$vendingMachineChargeAmount().should('have.text', 120);
-          });
+        cy.$vendingMachineChargeSubmit().click();
+        cy.$vendingMachineChargeAmount().should('have.text', 120);
       });
 
       it('충전금액을 입력하고 충전하기를 누른후 다시 충전하면 기존 충전한 금액과 합산된다.', () => {
         cy.$vendingMachineChargeInput().type(120);
-        cy.$vendingMachineChargeSubmit()
-          .click()
-          .then(() => {
-            cy.$vendingMachineChargeAmount().should('have.text', 120);
-            cy.$vendingMachineChargeInput().type(1000);
-            cy.$vendingMachineChargeSubmit()
-              .click()
-              .then(() => {
-                cy.$vendingMachineChargeAmount().should('have.text', 1120);
-              });
-          });
+        cy.$vendingMachineChargeSubmit().click();
+        cy.$vendingMachineChargeAmount().should('have.text', 120);
+        cy.$vendingMachineChargeInput().type(1000);
+        cy.$vendingMachineChargeSubmit().click();
+        cy.$vendingMachineChargeAmount().should('have.text', 1120);
       });
 
       it('보유금액이 변경된 경우 동전 보유 현황이 갱신된다.', () => {
         cy.$vendingMachineChargeInput().type(120);
-        cy.$vendingMachineChargeSubmit()
-          .click()
-          .then(() => {
-            cy.$vendingMachineChargeAmount().should('have.text', 120);
-            let amount = 0;
-            cy.$vendingMachineChargeCoinList()
-              .each(($chargeCoin) => {
-                const name = $chargeCoin.data('testName');
-                const quantity = $chargeCoin.data('testQuantity');
-                amount += quantity * name;
-              })
-              .then(() => {
-                expect(amount).eq(120);
-              });
-            cy.$vendingMachineChargeInput().type(1000);
-            cy.$vendingMachineChargeSubmit()
-              .click()
-              .then(() => {
-                cy.$vendingMachineChargeAmount().should('have.text', 1120);
-                let amount = 0;
-                cy.$vendingMachineChargeCoinList()
-                  .each(($chargeCoin) => {
-                    const name = $chargeCoin.data('testName');
-                    const quantity = $chargeCoin.data('testQuantity');
-                    amount += quantity * name;
-                  })
-                  .then(() => {
-                    expect(amount).eq(1120);
-                  });
-              });
-          });
+        cy.$vendingMachineChargeSubmit().click();
+        cy.$vendingMachineChargeAmount().should('have.text', 120);
+        cy.$vendingMachineChargeCoinList().then(($chargedCoins) => {
+          const totalAmount = [...$chargedCoins].reduce(
+            (result, $chargedCoin) => {
+              const name = $chargedCoin.dataset.testName;
+              const quantity = $chargedCoin.dataset.testQuantity;
+              result += quantity * name;
+              return result;
+            },
+            0
+          );
+          expect(totalAmount).eq(120);
+        });
+        cy.$vendingMachineChargeInput().type(1000);
+        cy.$vendingMachineChargeSubmit().click();
+        cy.$vendingMachineChargeAmount().should('have.text', 1120);
+        cy.$vendingMachineChargeCoinList().then(($chargedCoins) => {
+          const totalAmount = [...$chargedCoins].reduce(
+            (result, $chargedCoin) => {
+              const name = $chargedCoin.dataset.testName;
+              const quantity = $chargedCoin.dataset.testQuantity;
+              result += quantity * name;
+              return result;
+            },
+            0
+          );
+          expect(totalAmount).eq(1120);
+        });
       });
     });
   });
