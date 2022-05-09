@@ -46,7 +46,7 @@ const ProductPurchase = (() => {
   };
 
   const validatePurchase = (price) => {
-    if (updateChargedCostFromLocalStorage - price < 0) {
+    if (totalChargedCost - price < 0) {
       throw new Error('충전금액이 모자릅니다. 상품을 구매할수 없습니다.');
     }
   };
