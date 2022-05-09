@@ -72,7 +72,7 @@ export default class Product {
   #validate({ name, price, quantity, enableEmptyQuantity }) {
     this.#validateName(name);
     this.#validatePrice(price);
-    if (enableEmptyQuantity !== true) {
+    if (!enableEmptyQuantity) {
       this.#validateQuantity(quantity);
     }
   }
