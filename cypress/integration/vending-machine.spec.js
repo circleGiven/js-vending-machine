@@ -498,18 +498,12 @@ describe('자판기', () => {
 
     describe('상품구매 테스트', () => {
       beforeEach(() => {
-        cy.$productManageMenu()
-          .click()
-          .then(() => {
-            cy.$productNameInput().type('상품1');
-            cy.$productPriceInput().type(1000);
-            cy.$productQuantityInput().type(1);
-            cy.$productAddSubmit()
-              .click()
-              .then(() => {
-                cy.$productPurchaseMenu().click();
-              });
-          });
+        cy.$productManageMenu().click();
+        cy.$productNameInput().type('상품1');
+        cy.$productPriceInput().type(1000);
+        cy.$productQuantityInput().type(1);
+        cy.$productAddSubmit().click();
+        cy.$productPurchaseMenu().click();
       });
 
       it('충전금액보다 큰 상품을 구매하는경우 구매할 수 없다는 경고창이 뜬다.', () => {
@@ -526,25 +520,17 @@ describe('자판기', () => {
 
       it('정상적인 상품 구매완료시 상품의 수량이 하나 줄어들고 충전금액이 상품금액만큼 줄어든다.', () => {
         cy.$productPurchaseAmountChargeInput().type(1200);
-        cy.$productPurchaseAmountChargeSubmit()
-          .click()
-          .then(() => {
-            cy.$productPurchaseChargeAmount().should('have.text', 1200);
-            cy.findProduct({ name: '상품1', price: 1000, quantity: 1 })
-              .get('.purchase-button')
-              .click()
-              .then(() => {
-                cy.findProduct({
-                  name: '상품1',
-                  price: 1000,
-                  quantity: 0,
-                }).should('be.exist');
-                cy.$productPurchaseChargeAmount().should(
-                  'have.text',
-                  1200 - 1000
-                );
-              });
-          });
+        cy.$productPurchaseAmountChargeSubmit().click();
+        cy.$productPurchaseChargeAmount().should('have.text', 1200);
+        cy.findProduct({ name: '상품1', price: 1000, quantity: 1 })
+          .get('.purchase-button')
+          .click();
+        cy.findProduct({
+          name: '상품1',
+          price: 1000,
+          quantity: 0,
+        }).should('be.exist');
+        cy.$productPurchaseChargeAmount().should('have.text', 1200 - 1000);
       });
 
       it('상품의 수량이 없는상태에서 구매를 한경우 경고창이 뜬다.', () => {
@@ -552,30 +538,22 @@ describe('자판기', () => {
         cy.on('window:alert', alertStub);
 
         cy.$productPurchaseAmountChargeInput().type(4000);
-        cy.$productPurchaseAmountChargeSubmit()
+        cy.$productPurchaseAmountChargeSubmit().click();
+        cy.$productPurchaseChargeAmount().should('have.text', 4000);
+        cy.findProduct({ name: '상품1', price: 1000, quantity: 1 })
+          .get('.purchase-button')
+          .click();
+        cy.$productPurchaseChargeAmount().should('have.text', 4000 - 1000);
+        cy.findProduct({
+          name: '상품1',
+          price: 1000,
+          quantity: 0,
+        }).should('be.exist');
+        cy.findProduct({ name: '상품1', price: 1000, quantity: 0 })
+          .get('.purchase-button')
           .click()
           .then(() => {
-            cy.$productPurchaseChargeAmount().should('have.text', 4000);
-            cy.findProduct({ name: '상품1', price: 1000, quantity: 1 })
-              .get('.purchase-button')
-              .click()
-              .then(() => {
-                cy.$productPurchaseChargeAmount().should(
-                  'have.text',
-                  4000 - 1000
-                );
-                cy.findProduct({
-                  name: '상품1',
-                  price: 1000,
-                  quantity: 0,
-                }).should('be.exist');
-                cy.findProduct({ name: '상품1', price: 1000, quantity: 0 })
-                  .get('.purchase-button')
-                  .click()
-                  .then(() => {
-                    expect(alertStub).to.be.called;
-                  });
-              });
+            expect(alertStub).to.be.called;
           });
       });
     });
