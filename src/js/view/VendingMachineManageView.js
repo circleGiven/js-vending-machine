@@ -69,12 +69,12 @@ const $chargeCoinInventory = () =>
 
 const VendingMachineManageView = (() => {
   const updateChargeAmount = () => {
-    $chargeAmount().textContent = VendingMachineManage.chargeAmount();
+    $chargeAmount().textContent = VendingMachineManage.chargedAmount();
   };
 
   const updateChargeCoinList = () => {
     $chargeCoinInventory().replaceChildren(
-      ...VendingMachineManage.chargeCoinList().map((chargeCoin) =>
+      ...VendingMachineManage.chargedCoinList().map((chargeCoin) =>
         coinTemplate(chargeCoin)
       )
     );
@@ -93,7 +93,7 @@ const VendingMachineManageView = (() => {
   const handleChargingCoin = (event) => {
     event.preventDefault();
     try {
-      VendingMachineManage.chargingCoin($chargeAmountInput().value);
+      VendingMachineManage.chargeCoin($chargeAmountInput().value);
       initialize();
     } catch (e) {
       alert(e.message);
