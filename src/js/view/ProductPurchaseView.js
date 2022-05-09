@@ -96,7 +96,7 @@ const ProductPurchaseView = (() => {
   };
 
   const updateChargeAmount = () => {
-    $chargeAmount().textContent = ProductPurchase.chargeAmount();
+    $chargeAmount().textContent = ProductPurchase.chargedCost();
   };
 
   const initializeChargeFields = () => {
@@ -109,10 +109,10 @@ const ProductPurchaseView = (() => {
     initializeChargeFields();
   };
 
-  const handleChargingAmount = (event) => {
+  const handleChargeCost = (event) => {
     event.preventDefault();
     try {
-      ProductPurchase.chargingAmount($chargeAmountInput().value);
+      ProductPurchase.chargeCost($chargeAmountInput().value);
       initialize();
     } catch (e) {
       alert(e.message);
@@ -131,6 +131,6 @@ const ProductPurchaseView = (() => {
 
   const contents = () => contentTemplate();
 
-  return { contents, initialize, handleChargingAmount, handlePurchaseProduct };
+  return { contents, initialize, handleChargeCost, handlePurchaseProduct };
 })();
 export default ProductPurchaseView;

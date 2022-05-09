@@ -61,19 +61,19 @@ const coinTemplate = ({ name, quantity }) => {
 const $chargeAmountInput = () =>
   document.querySelector('#vending-machine-charge-input');
 
-const $chargeAmount = () =>
+const $chargedAmount = () =>
   document.querySelector('#vending-machine-charge-amount');
 
-const $chargeCoinInventory = () =>
+const $chargedCoinInventory = () =>
   document.querySelector('#coin-inventory-container');
 
 const VendingMachineManageView = (() => {
-  const updateChargeAmount = () => {
-    $chargeAmount().textContent = VendingMachineManage.chargedAmount();
+  const updateChargedAmount = () => {
+    $chargedAmount().textContent = VendingMachineManage.chargedAmount();
   };
 
-  const updateChargeCoinList = () => {
-    $chargeCoinInventory().replaceChildren(
+  const updateChargedCoinList = () => {
+    $chargedCoinInventory().replaceChildren(
       ...VendingMachineManage.chargedCoinList().map((chargeCoin) =>
         coinTemplate(chargeCoin)
       )
@@ -85,12 +85,12 @@ const VendingMachineManageView = (() => {
   };
 
   const initialize = () => {
-    updateChargeAmount();
-    updateChargeCoinList();
+    updateChargedAmount();
+    updateChargedCoinList();
     initializeChargeFields();
   };
 
-  const handleChargingCoin = (event) => {
+  const handleChargeCoin = (event) => {
     event.preventDefault();
     try {
       VendingMachineManage.chargeCoin($chargeAmountInput().value);
@@ -102,6 +102,6 @@ const VendingMachineManageView = (() => {
 
   const contents = () => vendingMachineManageTemplate();
 
-  return { contents, initialize, handleChargingCoin };
+  return { contents, initialize, handleChargeCoin };
 })();
 export default VendingMachineManageView;

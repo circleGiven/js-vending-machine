@@ -50,12 +50,12 @@ const handleMenuContentSubmit = (event) => {
   }
 
   if (isVendingMachineManageContent(formId)) {
-    VendingMachineManageView.handleChargingCoin(event);
+    VendingMachineManageView.handleChargeCoin(event);
     return;
   }
 
   if (isProductPurchaseContent(formId)) {
-    ProductPurchaseView.handleChargingAmount(event);
+    ProductPurchaseView.handleChargeCost(event);
   }
 };
 
