@@ -124,44 +124,35 @@ describe('자판기', () => {
 
     describe('상품 추가 테스트', () => {
       it('상품명을 입력하지 않고 추가하기를 눌렀을때 상품은 추가되지 않는다.', () => {
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.$productNameInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                valueMissing: true,
-                valid: false,
-              });
+        cy.$productAddSubmit().click();
+        cy.$productNameInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            valueMissing: true,
+            valid: false,
           });
       });
 
       it('상품가격을 입력하지 않고 추가하기를 눌렀을때 상품은 추가되지 않는다.', () => {
         cy.$productNameInput().type('상품명테스트');
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.$productPriceInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                valueMissing: true,
-                valid: false,
-              });
+        cy.$productAddSubmit().click();
+        cy.$productPriceInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            valueMissing: true,
+            valid: false,
           });
       });
 
       it('상품수량을 입력하지 않고 추가하기를 눌렀을때 상품은 추가되지 않는다.', () => {
         cy.$productNameInput().type('상품명테스트');
         cy.$productPriceInput().type(1000);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.$productQuantityInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                valueMissing: true,
-                valid: false,
-              });
+        cy.$productAddSubmit().click();
+        cy.$productQuantityInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            valueMissing: true,
+            valid: false,
           });
       });
 
@@ -169,22 +160,19 @@ describe('자판기', () => {
         cy.$productNameInput().type('경계값테스트');
         cy.$productPriceInput().type(99);
         cy.$productQuantityInput().type(0);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.$productPriceInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                stepMismatch: true,
-                rangeUnderflow: true,
-                valid: false,
-              });
-            cy.$productQuantityInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                rangeUnderflow: true,
-                valid: false,
-              });
+        cy.$productAddSubmit().click();
+        cy.$productPriceInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            stepMismatch: true,
+            rangeUnderflow: true,
+            valid: false,
+          });
+        cy.$productQuantityInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            rangeUnderflow: true,
+            valid: false,
           });
       });
 
@@ -192,34 +180,25 @@ describe('자판기', () => {
         cy.$productNameInput().type('상품명 테스트');
         cy.$productPriceInput().type(122);
         cy.$productQuantityInput().type(10);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.$productPriceInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                stepMismatch: true,
-                valid: false,
-              });
+        cy.$productAddSubmit().click();
+        cy.$productPriceInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            stepMismatch: true,
+            valid: false,
           });
       });
 
-      it('상품명을 공백은 입력되지 않는다..', () => {
-        const alertStub = cy.stub();
-        cy.on('window:alert', alertStub);
-
+      it('상품명을 공백은 입력되지 않는다.', () => {
         cy.$productNameInput().type(' ');
         cy.$productPriceInput().type(1000);
         cy.$productQuantityInput().type(10);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.$productNameInput()
-              .invoke('prop', 'validity')
-              .should('deep.include', {
-                valueMissing: true,
-                valid: false,
-              });
+        cy.$productAddSubmit().click();
+        cy.$productNameInput()
+          .invoke('prop', 'validity')
+          .should('deep.include', {
+            valueMissing: true,
+            valid: false,
           });
       });
 
@@ -230,11 +209,8 @@ describe('자판기', () => {
         cy.$productNameInput().type(name);
         cy.$productPriceInput().type(price);
         cy.$productQuantityInput().type(quantity);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.findProduct({ name, price, quantity }).should('be.exist');
-          });
+        cy.$productAddSubmit().click();
+        cy.findProduct({ name, price, quantity }).should('be.exist');
       });
 
       it('올바르게 상품을 입력한 경우 상품 목록에 입력한 내용의 상품이 추가된다.', () => {
@@ -244,11 +220,8 @@ describe('자판기', () => {
         cy.$productNameInput().type(name);
         cy.$productPriceInput().type(price);
         cy.$productQuantityInput().type(quantity);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.findProduct({ name, price, quantity }).should('be.exist');
-          });
+        cy.$productAddSubmit().click();
+        cy.findProduct({ name, price, quantity }).should('be.exist');
       });
 
       it('상품을 연속적으로 추가가 가능하다.', () => {
@@ -261,27 +234,21 @@ describe('자판기', () => {
         cy.$productNameInput().type(name1);
         cy.$productPriceInput().type(price1);
         cy.$productQuantityInput().type(quantity1);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.findProduct({
-              name: name1,
-              price: price1,
-              quantity: quantity1,
-            }).should('be.exist');
-          });
+        cy.$productAddSubmit().click();
+        cy.findProduct({
+          name: name1,
+          price: price1,
+          quantity: quantity1,
+        }).should('be.exist');
         cy.$productNameInput().type(name2);
         cy.$productPriceInput().type(price2);
         cy.$productQuantityInput().type(quantity2);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.findProduct({
-              name: name2,
-              price: price2,
-              quantity: quantity2,
-            }).should('be.exist');
-          });
+        cy.$productAddSubmit().click();
+        cy.findProduct({
+          name: name2,
+          price: price2,
+          quantity: quantity2,
+        }).should('be.exist');
       });
 
       it('같은 상품명을 연속적으로 추가하는 경우 기존 상품이 대체된다.', () => {
@@ -294,40 +261,31 @@ describe('자판기', () => {
         cy.$productNameInput().type(name1);
         cy.$productPriceInput().type(price1);
         cy.$productQuantityInput().type(quantity1);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.findProduct({
-              name: name1,
-              price: price1,
-              quantity: quantity1,
-            }).should('be.exist');
-          });
+        cy.$productAddSubmit().click();
+        cy.findProduct({
+          name: name1,
+          price: price1,
+          quantity: quantity1,
+        }).should('be.exist');
         cy.$productNameInput().type(name2);
         cy.$productPriceInput().type(price2);
         cy.$productQuantityInput().type(quantity2);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.findProduct({
-              name: name2,
-              price: price2,
-              quantity: quantity2,
-            }).should('be.exist');
-          });
+        cy.$productAddSubmit().click();
+        cy.findProduct({
+          name: name2,
+          price: price2,
+          quantity: quantity2,
+        }).should('be.exist');
         cy.$productNameInput().type(name1);
         cy.$productPriceInput().type(price1 + 1000);
         cy.$productQuantityInput().type(quantity1 + 10);
-        cy.$productAddSubmit()
-          .click()
-          .then(() => {
-            cy.findProduct({
-              name: name1,
-              price: price1 + 1000,
-              quantity: quantity1 + 10,
-            }).should('be.exist');
-            cy.$productList().should('have.length', 2);
-          });
+        cy.$productAddSubmit().click();
+        cy.findProduct({
+          name: name1,
+          price: price1 + 1000,
+          quantity: quantity1 + 10,
+        }).should('be.exist');
+        cy.$productList().should('have.length', 2);
       });
     });
   });
